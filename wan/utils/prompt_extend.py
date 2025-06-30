@@ -14,10 +14,10 @@ import torch
 from PIL import Image
 
 try:
-    from flash_attn import flash_attn_varlen_func
-    FLASH_VER = 2
+    from flash_attn import flash_attn_unpadded_func
+    FLASH_VER = 1
 except ModuleNotFoundError:
-    flash_attn_varlen_func = None  # in compatible with CPU machines
+    flash_attn_unpadded_func = None  # in compatible with CPU machines
     FLASH_VER = None
 
 LM_ZH_SYS_PROMPT = \
@@ -414,10 +414,10 @@ class QwenPromptExpander(PromptExpander):
                 use_fast=True)
             self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
                 self.model_name,
-                torch_dtype=torch.bfloat16 if FLASH_VER == 2 else
+                torch_dtype=torch.bfloat16 if FLASH_VER == 1 else
                 torch.float16 if "AWQ" in self.model_name else "auto",
                 attn_implementation="flash_attention_2"
-                if FLASH_VER == 2 else None,
+                if FLASH_VER == 1 else None,
                 device_map="cpu")
         else:
             from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -426,7 +426,7 @@ class QwenPromptExpander(PromptExpander):
                 torch_dtype=torch.float16
                 if "AWQ" in self.model_name else "auto",
                 attn_implementation="flash_attention_2"
-                if FLASH_VER == 2 else None,
+                if FLASH_VER == 1 else None,
                 device_map="cpu")
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
 
