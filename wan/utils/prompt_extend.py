@@ -14,7 +14,7 @@ import torch
 from PIL import Image
 
 try:
-    from flash_attn import flash_attn_unpadded_func
+    from flash_attn.flash_attn_interface import flash_attn_unpadded_func
     FLASH_VER = 1
 except:
     flash_attn_unpadded_func = None  # in compatible with CPU machines
