@@ -9,6 +9,7 @@ tqdm
 imageio
 easydict
 ftfy
+flash_attn
 dashscope
 imageio-ffmpeg
 gradio>=5.0.0
