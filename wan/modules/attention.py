@@ -9,9 +9,11 @@ except ModuleNotFoundError:
 
 try:
     import flash_attn
-    FLASH_ATTN_2_AVAILABLE = True
+    # FLASH_ATTN_2_AVAILABLE = True
+    FLASH_ATTN_1_AVAILABLE = True
 except ModuleNotFoundError:
-    FLASH_ATTN_2_AVAILABLE = False
+    # FLASH_ATTN_2_AVAILABLE = False
+    FLASH_ATTN_1_AVAILABLE = False
 
 import warnings
 
@@ -109,8 +111,9 @@ def flash_attention(
             causal=causal,
             deterministic=deterministic)[0].unflatten(0, (b, lq))
     else:
-        assert FLASH_ATTN_2_AVAILABLE
-        x = flash_attn.flash_attn_varlen_func(
+        # assert FLASH_ATTN_2_AVAILABLE
+        assert FLASH_ATTN_1_AVAILABLE
+        x = flash_attn.flash_attn_unpadded_func(
             q=q,
             k=k,
             v=v,
@@ -145,7 +148,7 @@ def attention(
     dtype=torch.bfloat16,
     fa_version=None,
 ):
-    if FLASH_ATTN_2_AVAILABLE or FLASH_ATTN_3_AVAILABLE:
+    if FLASH_ATTN_1_AVAILABLE or FLASH_ATTN_3_AVAILABLE:
         return flash_attention(
             q=q,
             k=k,
